@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KeyDerivationLib", "KeyDeri
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KeyDerivation", "KeyDerivationInterface\KeyDerivation.csproj", "{4FC13D77-E798-4369-B549-80CFB4BEB864}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TuviBytesShamirSecretSharingLib", "gitmodules\TuviBytesShamirSecretSharingLib\TuviBytesShamirSecretSharingLib\TuviBytesShamirSecretSharingLib\TuviBytesShamirSecretSharingLib.csproj", "{0E94BE24-8000-45EE-9E37-6A2AF6A81147}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GF256Computations", "gitmodules\TuviBytesShamirSecretSharingLib\TuviBytesShamirSecretSharingLib\GF256Computations\GF256Computations.csproj", "{83F39BAD-85EA-4C7A-81F2-21E8E7E69DE8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{4FC13D77-E798-4369-B549-80CFB4BEB864}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4FC13D77-E798-4369-B549-80CFB4BEB864}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4FC13D77-E798-4369-B549-80CFB4BEB864}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E94BE24-8000-45EE-9E37-6A2AF6A81147}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E94BE24-8000-45EE-9E37-6A2AF6A81147}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E94BE24-8000-45EE-9E37-6A2AF6A81147}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E94BE24-8000-45EE-9E37-6A2AF6A81147}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83F39BAD-85EA-4C7A-81F2-21E8E7E69DE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83F39BAD-85EA-4C7A-81F2-21E8E7E69DE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83F39BAD-85EA-4C7A-81F2-21E8E7E69DE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83F39BAD-85EA-4C7A-81F2-21E8E7E69DE8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
