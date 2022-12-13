@@ -16,7 +16,7 @@
 
 using System;
 
-namespace Entities
+namespace KeyDerivation.Keys
 {
     public static class KeySerialization
     {

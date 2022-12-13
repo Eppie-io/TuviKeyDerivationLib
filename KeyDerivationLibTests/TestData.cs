@@ -1,4 +1,4 @@
-﻿using Entities;
+﻿using KeyDerivation.Keys;
 using MimeKit;
 
 namespace KeyDerivationLibTests

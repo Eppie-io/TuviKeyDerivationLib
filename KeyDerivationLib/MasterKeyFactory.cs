@@ -14,8 +14,8 @@
 //   limitations under the License.
 ///////////////////////////////////////////////////////////////////////////////
 
-using Entities;
 using KeyDerivation;
+using KeyDerivation.Keys;
 using NBitcoin;
 using NBitcoin.Crypto;
 using NBitcoin.DataEncoders;

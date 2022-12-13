@@ -1,5 +1,5 @@
-﻿using Entities;
-using KeyDerivation;
+﻿using KeyDerivation;
+using KeyDerivation.Keys;
 using KeyDerivationLib;
 
 namespace KeyDerivationLibTests

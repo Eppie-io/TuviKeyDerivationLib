@@ -16,7 +16,7 @@
 
 using System.Linq;
 
-namespace Entities
+namespace KeyDerivation.Keys
 {
     // Use this as Data Transfer Object only.
     public class MasterKey : PrivateKey
