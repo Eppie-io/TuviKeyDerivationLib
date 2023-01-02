@@ -19,11 +19,11 @@ using System.Linq;
 namespace KeyDerivation.Keys
 {
     // Use this as Data Transfer Object only.
-    public class MasterKey : PrivateKey
+    public class MasterKey : PrivateDrivationKey
     {
     }
 
-    public class PrivateKey
+    public class PrivateDrivationKey
     {
 #pragma warning disable CA1819 // Properties should not return arrays
         public byte[] Scalar { get; set; }
@@ -33,7 +33,7 @@ namespace KeyDerivation.Keys
 
         public override bool Equals(object obj)
         {
-            if (obj is PrivateKey other)
+            if (obj is PrivateDrivationKey other)
             {
                 if ((Scalar == null && other.Scalar == null) ||
                      Scalar.SequenceEqual(other.Scalar))
