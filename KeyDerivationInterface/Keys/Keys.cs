@@ -18,6 +18,7 @@ using KeyDerivation.Entities;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.X9;
 using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Math.EC;
 using Org.BouncyCastle.Math.EC.Multiplier;
 using Org.BouncyCastle.Security;
@@ -107,7 +108,7 @@ namespace KeyDerivation.Keys
 
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            return new BigInteger(scalar.Concat(ChainCode).ToArray()).GetHashCode();
         }
     }
 
@@ -207,7 +208,7 @@ namespace KeyDerivation.Keys
 
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            return (publicKey, new BigInteger(ChainCode)).GetHashCode();
         }
     }
 }

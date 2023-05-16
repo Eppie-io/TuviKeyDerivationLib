@@ -33,27 +33,6 @@ namespace KeyDerivationLibTests
             "abandon", "abandon", "abandon", "ability"
         };
 
-        public static string[] GetTestSeed()
-        {
-            return new string[] {
-                "ozone",    "drill",    "grab",
-                "fiber",    "curtain",  "grace",
-                "pudding",  "thank",    "cruise",
-                "elder",    "eight",    "picnic"
-            };
-        }
-
-        public static List<KeyValuePair<string, bool>> GetDictionaryTestData()
-        {
-            return new List<KeyValuePair<string, bool>>()
-            {
-                new KeyValuePair<string, bool>("hello", true),
-                new KeyValuePair<string, bool>("shine", true),
-                new KeyValuePair<string, bool>("abracadabra", false),
-                new KeyValuePair<string, bool>("fakdfbmsp", false)
-            };
-        }
-
         public static readonly MasterKey MasterKey = CreateMasterKey(TestSeedPhrase);
 
         public static readonly MasterKey MasterKey2 = CreateMasterKey(TestSeedPhrase2);
@@ -129,5 +108,7 @@ namespace KeyDerivationLibTests
                 0xad, 0x0e, 0xd5, 0xd7, 0xbc, 0x2f, 0x8c, 0xb6, 0xf5, 0x89, 0x9d, 0x8e, 0x27, 0xaf, 0x81, 0xfd
             }
         );
+
+        public const int PrivateKeyHashCode = -110109786;
     }
 }

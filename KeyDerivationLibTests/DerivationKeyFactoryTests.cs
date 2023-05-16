@@ -96,5 +96,11 @@ namespace KeyDerivationLibTests
 
             Assert.That(key2, Is.Not.EqualTo(key1), "Keys with different KeyIndex have to be different too");
         }
+
+        [Test]
+        public void NullDerivationKeyParamThrowsArgumentNullException()
+        {
+            Assert.Throws<ArgumentNullException>(() => DerivationKeyFactory.DerivePrivateChildKey(null, 1));
+        }
     }
 }

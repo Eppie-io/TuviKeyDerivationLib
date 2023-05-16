@@ -15,17 +15,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 using KeyDerivationLib;
-using Org.BouncyCastle.Asn1.X9;
-using Org.BouncyCastle.Asn1;
-using Org.BouncyCastle.Crypto.Parameters;
-using Org.BouncyCastle.Math.EC.Multiplier;
-using Org.BouncyCastle.Security;
-using Org.BouncyCastle.Math;
-using Org.BouncyCastle.Math.EC;
 
 namespace KeyDerivationLibTests
 {
-    public class NewDerivationKeyFactoryTests
+    public class PrivateDerivationKeyFactoryTests
     {
         [Test]
         public void CompareDerivatedKeys()
@@ -116,80 +109,15 @@ namespace KeyDerivationLibTests
         }
 
         [Test]
-        public void PublicDerivationKeysAreDeterministic()
+        public void CreatePrivateDerivationKeyNullKeyParamThrowsArgumentNullException()
         {
-            var initialPrivateKey = PrivateDerivationKeyFactory.CreatePrivateDerivationKey(NewTestData.MasterKey, NewTestData.RightTag);
-            var initialPublicKey = initialPrivateKey.PublicDerivationKey;
-            var resultPublicKey = PublicDerivationKeyFactory.CreatePublicDerivationKey(initialPublicKey, NewTestData.RightTag);
-
-            Assert.That(NewTestData.InitailPublicKey.compressedKey, Is.EqualTo(initialPublicKey.PublicKey.GetEncoded(true)), "Key is not same as predicted");
-            Assert.That(NewTestData.InitailPublicKey.chainCode, Is.EqualTo(initialPublicKey.ChainCode), "Key is not same as predicted");
-            Assert.That(NewTestData.ResultPublicKey.compressedKey, Is.EqualTo(resultPublicKey.PublicKey.GetEncoded(true)), "Key is not same as predicted");
-            Assert.That(NewTestData.ResultPublicKey.chainCode, Is.EqualTo(resultPublicKey.ChainCode), "Key is not same as predicted");
+            Assert.Throws<ArgumentNullException>(() => PrivateDerivationKeyFactory.CreatePrivateDerivationKey(null, "some text"));            
         }
 
         [Test]
-        public void PublicDerivationKeysAreDifferentWithMasterKey()
+        public void DerivePrivateChildKeyNullKeyParamThrowsArgumentNullException()
         {
-            var key1 = PublicDerivationKeyFactory.CreatePublicDerivationKey(NewTestData.MasterKey.PublicDerivationKey, NewTestData.RightTag);
-            var key2 = PublicDerivationKeyFactory.CreatePublicDerivationKey(NewTestData.MasterKey2.PublicDerivationKey, NewTestData.RightTag);
-
-            Assert.That(key2, Is.Not.EqualTo(key1), "Keys with different MasterKey have to be different too");
-        }
-
-        [Test]
-        public void PublicDerivationKeysAreDifferentWithTags()
-        {
-            var key1 = PublicDerivationKeyFactory.CreatePublicDerivationKey(NewTestData.MasterKey.PublicDerivationKey, NewTestData.RightTag);
-            var key2 = PublicDerivationKeyFactory.CreatePublicDerivationKey(NewTestData.MasterKey.PublicDerivationKey, NewTestData.WrongTag);
-
-            Assert.That(key2, Is.Not.EqualTo(key1), "Keys with different userId have to be different too");
-        }
-
-        [Test]
-        public void PublicChildKeysAreDifferentWithMasterKey()
-        {
-            var derivationKey1 = PublicDerivationKeyFactory.CreatePublicDerivationKey(NewTestData.MasterKey.PublicDerivationKey, NewTestData.RightTag);
-            var derivationKey2 = PublicDerivationKeyFactory.CreatePublicDerivationKey(NewTestData.MasterKey2.PublicDerivationKey, NewTestData.RightTag);
-
-            var key1 = PublicDerivationKeyFactory.DerivePublicChildKeyAsBytes(derivationKey1, 0);
-            var key2 = PublicDerivationKeyFactory.DerivePublicChildKeyAsBytes(derivationKey2, 0);
-
-            Assert.That(key2, Is.Not.EqualTo(key1), "Keys with different MasterKey have to be different too");
-        }
-
-        [Test]
-        public void PublicChildKeysAreDifferentWithKeyIndex()
-        {
-            var derivationKey = PublicDerivationKeyFactory.CreatePublicDerivationKey(NewTestData.MasterKey.PublicDerivationKey, NewTestData.RightTag);
-
-            var key1 = PublicDerivationKeyFactory.DerivePublicChildKeyAsBytes(derivationKey, 0);
-            var key2 = PublicDerivationKeyFactory.DerivePublicChildKeyAsBytes(derivationKey, 1);
-
-            Assert.That(key2, Is.Not.EqualTo(key1), "Keys with different KeyIndex have to be different too");
-        }
-
-        [Test]
-        public void CompareChildDerivatedKeys()
-        {
-            var privateDerivationKey = PrivateDerivationKeyFactory.CreatePrivateDerivationKey(NewTestData.MasterKey, NewTestData.RightTag);            
-            var childPrivateKey = PrivateDerivationKeyFactory.DerivePrivateChildKey(privateDerivationKey, 0);
-            
-            string BitcoinEllipticCurveName = "secp256k1";
-            DerObjectIdentifier curveOid = ECNamedCurveTable.GetOid(BitcoinEllipticCurveName);
-            ECKeyGenerationParameters keyParams = new ECKeyGenerationParameters(curveOid, new SecureRandom());
-            ECPrivateKeyParameters privateKey = new ECPrivateKeyParameters("EC", new BigInteger(1, childPrivateKey), keyParams.PublicKeyParamSet);
-            ECMultiplier multiplier = new FixedPointCombMultiplier();
-            ECPoint q = multiplier.Multiply(keyParams.DomainParameters.G, privateKey.D); // child public key from private key
-
-            var publicDerivationKey = PublicDerivationKeyFactory.CreatePublicDerivationKey(NewTestData.MasterKey.PublicDerivationKey, NewTestData.RightTag);
-            var childPublicKey = PublicDerivationKeyFactory.DerivePublicChildKeyAsBytes(publicDerivationKey, 0);
-            ECPoint q2 = keyParams.DomainParameters.Curve.DecodePoint(childPublicKey); // child public key from public key
-
-            ECPoint q3 = PublicDerivationKeyFactory.DerivePublicChildKeyAsECPoint(publicDerivationKey, 0);
-
-            Assert.That(q, Is.EqualTo(q2));
-            Assert.That(q, Is.EqualTo(q3));
+            Assert.Throws<ArgumentNullException>(() => PrivateDerivationKeyFactory.DerivePrivateChildKey(null, 1));
         }
     }
 }
