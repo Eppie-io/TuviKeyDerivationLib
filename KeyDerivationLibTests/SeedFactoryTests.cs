@@ -57,7 +57,7 @@ namespace KeyDerivationLibTests
             Assert.That(KeyDerivationDetails.GetSeedPhraseLength(), Is.EqualTo(seed.Length), "Seed phrase has to contain not less than 12 words");
             foreach (var word in seed)
             {
-                Assert.IsNotEmpty(word);
+                Assert.That(word, Is.Not.Null.And.Not.Empty);
             }
         }
 
@@ -97,7 +97,8 @@ namespace KeyDerivationLibTests
             string[] seed = KeyFactory.GenerateSeedPhrase();
             foreach (var word in seed)
             {
-                Assert.IsTrue(MasterKeyFactory.IsWordExistInDictionary(word));
+                bool isExist = MasterKeyFactory.IsWordExistInDictionary(word);
+                Assert.That(isExist, Is.True);
             }
         }
 
