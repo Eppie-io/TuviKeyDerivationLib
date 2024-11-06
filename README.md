@@ -23,7 +23,7 @@ Contributions are welcome! Please open an issue or submit a pull request on the 
 
 ## License
 
-This project is licensed under the Apache License 2.0 - See the [LICENSE](http://www.apache.org/licenses/LICENSE-2.0) for details.
+This project is licensed under the Apache License 2.0 - See the [LICENSE](LICENSE) for details.
 
 ## Acknowledgements
 
