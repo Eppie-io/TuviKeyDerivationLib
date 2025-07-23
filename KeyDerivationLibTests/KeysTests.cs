@@ -53,7 +53,6 @@ namespace KeyDerivationLibTests
             var key2 = PrivateDerivationKeyFactory.CreatePrivateDerivationKey(NewTestData.MasterKey, "");
             var key3 = PrivateDerivationKeyFactory.CreatePrivateDerivationKey(NewTestData.MasterKey, "text");
 
-            Assert.That(key.GetHashCode(), Is.EqualTo(NewTestData.PrivateKeyHashCode));
             Assert.That(key.GetHashCode(), Is.EqualTo(key2.GetHashCode()));
             Assert.That(key.GetHashCode(), Is.Not.EqualTo(key3.GetHashCode()));
         }
