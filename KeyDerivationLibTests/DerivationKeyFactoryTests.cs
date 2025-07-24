@@ -14,7 +14,9 @@
 //   limitations under the License.
 ///////////////////////////////////////////////////////////////////////////////
 
+using KeyDerivation.Keys;
 using KeyDerivationLib;
+using NBitcoin;
 
 namespace KeyDerivationLibTests
 {
@@ -101,6 +103,93 @@ namespace KeyDerivationLibTests
         public void NullDerivationKeyParamThrowsArgumentNullException()
         {
             Assert.Throws<ArgumentNullException>(() => DerivationKeyFactory.DerivePrivateChildKey(null, 1));
+        }
+
+        [Test]
+        public void CreatePrivateDerivationKeyBip44CreatesKey()
+        {
+            var masterKey = TestData.MasterKey;
+            var derivedKey = DerivationKeyFactory.CreatePrivateDerivationKeyBip44(masterKey, 3630, 0, 10, 0);
+            Assert.That(derivedKey, Is.Not.Null);
+            Assert.That(derivedKey.Scalar, Is.Not.Null.And.Length.EqualTo(32));
+            Assert.That(derivedKey.ChainCode, Is.Not.Null.And.Length.EqualTo(32));
+        }
+
+        [Test]
+        public void CreatePrivateDerivationKeyBip44NullMasterKeyThrows()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                DerivationKeyFactory.CreatePrivateDerivationKeyBip44(null, 3630, 0, 10, 0);
+            });
+        }
+
+        [Test]
+        public void CreatePrivateDerivationKeyBip44BoundaryIndices()
+        {
+            var masterKey = TestData.MasterKey;
+            var minKey = DerivationKeyFactory.CreatePrivateDerivationKeyBip44(masterKey, 0, 0, 0, 0);
+            var maxKey = DerivationKeyFactory.CreatePrivateDerivationKeyBip44(masterKey, int.MaxValue, int.MaxValue, int.MaxValue, int.MaxValue);
+            Assert.That(minKey, Is.Not.Null);
+            Assert.That(maxKey, Is.Not.Null);
+            Assert.That(minKey.Scalar, Is.Not.Null.And.Length.EqualTo(32));
+            Assert.That(maxKey.Scalar, Is.Not.Null.And.Length.EqualTo(32));
+        }
+
+        [Test]
+        public void CreatePrivateDerivationKeyBip44Repeatability()
+        {
+            var masterKey = TestData.MasterKey;
+            var key1 = DerivationKeyFactory.CreatePrivateDerivationKeyBip44(masterKey, 3630, 0, 10, 0);
+            var key2 = DerivationKeyFactory.CreatePrivateDerivationKeyBip44(masterKey, 3630, 0, 10, 0);
+            Assert.That(key1.Scalar, Is.EqualTo(key2.Scalar));
+            Assert.That(key1.ChainCode, Is.EqualTo(key2.ChainCode));
+        }
+
+        [Test]
+        public void CreatePrivateDerivationKeyBip44Uniqueness()
+        {
+            var masterKey = TestData.MasterKey;
+            var key1 = DerivationKeyFactory.CreatePrivateDerivationKeyBip44(masterKey, 3630, 0, 10, 0);
+            var key2 = DerivationKeyFactory.CreatePrivateDerivationKeyBip44(masterKey, 3630, 0, 10, 1);
+            Assert.That(key1.Scalar, Is.Not.EqualTo(key2.Scalar));
+            Assert.That(key1.ChainCode, Is.Not.EqualTo(key2.ChainCode));
+        }
+
+        [Test]
+        public void CreatePrivateDerivationKeyBip44BitcoinStandardPath()
+        {
+            string mnemonic = "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon";
+            var mnemo = new Mnemonic(mnemonic, Wordlist.English);
+            ExtKey masterExtKey = mnemo.DeriveExtKey();
+            
+            var masterKey = KeySerialization.ToPrivateDerivationKey(
+                masterExtKey.PrivateKey.ToBytes(),
+                masterExtKey.ChainCode
+            );
+
+            var keyPath = new KeyPath("m/44'/0'/0'/0/0");
+
+            var customKey = DerivationKeyFactory.CreatePrivateDerivationKeyBip44(masterKey, 0, 0, 0, 0);
+
+            var derivedExtKey = masterExtKey.Derive(keyPath);
+            var standardScalar = derivedExtKey.PrivateKey.ToBytes();
+            var standardChainCode = derivedExtKey.ChainCode;
+
+            Assert.That(customKey.Scalar.SequenceEqual(standardScalar));
+            Assert.That(customKey.ChainCode.SequenceEqual(standardChainCode));
+           
+            using (var customPrivateKey = new Key(customKey.Scalar))
+            using (var standardPrivateKey = new Key(standardScalar))
+            {
+                var customAddress = customPrivateKey.PubKey.GetAddress(ScriptPubKeyType.Legacy, Network.Main);
+                var standardAddress = standardPrivateKey.PubKey.GetAddress(ScriptPubKeyType.Legacy, Network.Main);
+                Assert.That(customAddress == standardAddress);
+
+                var customWif = customPrivateKey.GetWif(Network.Main);
+                var standardWif = standardPrivateKey.GetWif(Network.Main);
+                Assert.That(customWif == standardWif);
+            }
         }
     }
 }

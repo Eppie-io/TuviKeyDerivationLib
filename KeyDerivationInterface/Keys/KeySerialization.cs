@@ -56,6 +56,15 @@ namespace KeyDerivation.Keys
             };
         }
 
+        public static PrivateDerivationKey ToPrivateDerivationKey(byte[] scalar, byte[] chainCode)
+        {
+            return new PrivateDerivationKey
+            {
+                Scalar = scalar,
+                ChainCode = chainCode
+            };
+        }
+
         public static byte[] ToByteBuffer(this PrivateDerivationKey key)
         {
             if (key == null)
