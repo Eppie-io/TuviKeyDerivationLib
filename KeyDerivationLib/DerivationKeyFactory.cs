@@ -18,7 +18,6 @@ using KeyDerivation.Keys;
 using NBitcoin;
 using NBitcoin.Crypto;
 using System;
-using System.ComponentModel;
 using System.Text;
 
 namespace KeyDerivationLib
@@ -66,12 +65,12 @@ namespace KeyDerivationLib
 
             if (derivationKey.Scalar is null || derivationKey.ChainCode is null)
             {
-                throw new InvalidEnumArgumentException("Derivation key scalar or chain code cannot be null.");
+                throw new ArgumentException("Derivation key scalar or chain code cannot be null.");
             }
 
             if (derivationKey.Scalar.Length != 32 || derivationKey.ChainCode.Length != 32)
             {
-                throw new InvalidEnumArgumentException("Derivation key scalar and chain code must be 32 bytes long.");
+                throw new ArgumentException("Derivation key scalar and chain code must be 32 bytes long.");
             }
 
             using (var eccKey = new Key(derivationKey.Scalar))
