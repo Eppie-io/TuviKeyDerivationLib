@@ -57,8 +57,8 @@ namespace KeyDerivationLibTests
         {
             var derivationKey = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.RightTag);
 
-            var key1 = DerivationKeyFactory.DerivePrivateChildKey(derivationKey, 0);
-            var key2 = DerivationKeyFactory.DerivePrivateChildKey(derivationKey, 1);
+            var key1 = DerivationKeyFactory.DerivePrivateChildKey(derivationKey, 0).Scalar;
+            var key2 = DerivationKeyFactory.DerivePrivateChildKey(derivationKey, 1).Scalar;
 
             Assert.That(TestData.PrivateChildKey1, Is.EqualTo(key1), "Key is not same as predicted");
             Assert.That(TestData.PrivateChildKey2, Is.EqualTo(key2), "Key is not same as predicted");
