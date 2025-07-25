@@ -45,23 +45,43 @@ namespace KeyDerivationLib
         }
 
         /// <summary>
-        /// Derive private child key from private derivation key and it's index.
+        /// Derive child key from private derivation key and it's index.
         /// </summary>
         /// <param name="derivationKey">Private derivation key.</param>
         /// <param name="index">Private child key index.</param>
-        /// <returns>Private child key.</returns>
+        /// <returns>Child key.</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static byte[] DerivePrivateChildKey(PrivateDerivationKey derivationKey, int index)
+        public static PrivateDerivationKey DerivePrivateChildKey(PrivateDerivationKey derivationKey, int index)
         {
             if (derivationKey is null)
             {
                 throw new ArgumentNullException(nameof(derivationKey));
             }
 
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index), "Index must be a non-negative integer.");
+            }
+
+            if (derivationKey.Scalar is null || derivationKey.ChainCode is null)
+            {
+                throw new ArgumentException("Derivation key scalar or chain code cannot be null.");
+            }
+
+            if (derivationKey.Scalar.Length != 32 || derivationKey.ChainCode.Length != 32)
+            {
+                throw new ArgumentException("Derivation key scalar and chain code must be 32 bytes long.");
+            }
+
             using (var eccKey = new Key(derivationKey.Scalar))
             {
                 ExtKey derivationExtKey = new ExtKey(eccKey, derivationKey.ChainCode);
-                return derivationExtKey.Derive(index, true).PrivateKey.ToBytes();
+                derivationExtKey = derivationExtKey.Derive(index, true);
+                
+                var privKey = derivationExtKey.PrivateKey.ToBytes();
+                var chainCode = derivationExtKey.ChainCode;
+
+                return KeySerialization.ToPrivateDerivationKey(privKey, chainCode);
             }
         }
 
