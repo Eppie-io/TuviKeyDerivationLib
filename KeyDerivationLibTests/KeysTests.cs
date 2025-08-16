@@ -23,9 +23,9 @@ namespace KeyDerivationLibTests
         [Test]
         public void PrivateDerivationKeyEqualsCorrectWork()
         {
-            var key1 = PrivateDerivationKeyFactory.CreatePrivateDerivationKey(NewTestData.MasterKey, NewTestData.RightTag);
-            var key2 = PrivateDerivationKeyFactory.CreatePrivateDerivationKey(NewTestData.MasterKey, NewTestData.RightTag);
-            var key3 = PrivateDerivationKeyFactory.CreatePrivateDerivationKey(NewTestData.MasterKey, NewTestData.WrongTag);
+            using var key1 = PrivateDerivationKeyFactory.CreatePrivateDerivationKey(NewTestData.MasterKey, NewTestData.RightTag);
+            using var key2 = PrivateDerivationKeyFactory.CreatePrivateDerivationKey(NewTestData.MasterKey, NewTestData.RightTag);
+            using var key3 = PrivateDerivationKeyFactory.CreatePrivateDerivationKey(NewTestData.MasterKey, NewTestData.WrongTag);
             
             Assert.That(key1.Equals(key1), Is.EqualTo(true));
             Assert.That(key1.Equals(key2), Is.EqualTo(true));
@@ -49,9 +49,9 @@ namespace KeyDerivationLibTests
         [Test]
         public void PrivateDerivationKeyGethashCodeCorrectWork()
         {
-            var key = PrivateDerivationKeyFactory.CreatePrivateDerivationKey(NewTestData.MasterKey, "");
-            var key2 = PrivateDerivationKeyFactory.CreatePrivateDerivationKey(NewTestData.MasterKey, "");
-            var key3 = PrivateDerivationKeyFactory.CreatePrivateDerivationKey(NewTestData.MasterKey, "text");
+            using var key = PrivateDerivationKeyFactory.CreatePrivateDerivationKey(NewTestData.MasterKey, "");
+            using var key2 = PrivateDerivationKeyFactory.CreatePrivateDerivationKey(NewTestData.MasterKey, "");
+            using var key3 = PrivateDerivationKeyFactory.CreatePrivateDerivationKey(NewTestData.MasterKey, "text");
 
             Assert.That(key.GetHashCode(), Is.EqualTo(key2.GetHashCode()));
             Assert.That(key.GetHashCode(), Is.Not.EqualTo(key3.GetHashCode()));

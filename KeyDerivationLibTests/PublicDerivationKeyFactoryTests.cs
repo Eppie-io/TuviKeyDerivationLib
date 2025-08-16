@@ -31,26 +31,26 @@ namespace KeyDerivationLibTests
         [Test]
         public void PublicDerivationKeysAreDeterministic()
         {
-            var initialPrivateKey = PrivateDerivationKeyFactory.CreatePrivateDerivationKey(NewTestData.MasterKey, NewTestData.RightTag);
+            using var initialPrivateKey = PrivateDerivationKeyFactory.CreatePrivateDerivationKey(NewTestData.MasterKey, NewTestData.RightTag);
             var initialPublicKey = initialPrivateKey.PublicDerivationKey;
             var resultPublicKey = PublicDerivationKeyFactory.CreatePublicDerivationKey(initialPublicKey, NewTestData.RightTag);
 
             Assert.That(NewTestData.InitailPublicKey.compressedKey, Is.EqualTo(initialPublicKey.PublicKey.GetEncoded(true)), "Key is not same as predicted");
-            Assert.That(NewTestData.InitailPublicKey.chainCode, Is.EqualTo(initialPublicKey.ChainCode), "Key is not same as predicted");
+            Assert.That(NewTestData.InitailPublicKey.chainCode, Is.EqualTo(initialPublicKey.ChainCode.ToArray()), "Key is not same as predicted");
             Assert.That(NewTestData.ResultPublicKey.compressedKey, Is.EqualTo(resultPublicKey.PublicKey.GetEncoded(true)), "Key is not same as predicted");
-            Assert.That(NewTestData.ResultPublicKey.chainCode, Is.EqualTo(resultPublicKey.ChainCode), "Key is not same as predicted");
+            Assert.That(NewTestData.ResultPublicKey.chainCode, Is.EqualTo(resultPublicKey.ChainCode.ToArray()), "Key is not same as predicted");
         }
 
         [Test]
         public void PublicDerivationKeysAreDeterministicFromPrivateKey()
         {
-            var initialPrivateKey = PrivateDerivationKeyFactory.CreatePrivateDerivationKey(NewTestData.MasterKey, NewTestData.RightTag);
+            using var initialPrivateKey = PrivateDerivationKeyFactory.CreatePrivateDerivationKey(NewTestData.MasterKey, NewTestData.RightTag);
             var resultPublicKey = PublicDerivationKeyFactory.CreatePublicDerivationKey(initialPrivateKey, NewTestData.RightTag);
 
             Assert.That(NewTestData.InitailPublicKey.compressedKey, Is.EqualTo(initialPrivateKey.PublicDerivationKey.PublicKey.GetEncoded(true)), "Key is not same as predicted");
-            Assert.That(NewTestData.InitailPublicKey.chainCode, Is.EqualTo(initialPrivateKey.PublicDerivationKey.ChainCode), "Key is not same as predicted");
+            Assert.That(NewTestData.InitailPublicKey.chainCode, Is.EqualTo(initialPrivateKey.PublicDerivationKey.ChainCode.ToArray()), "Key is not same as predicted");
             Assert.That(NewTestData.ResultPublicKey.compressedKey, Is.EqualTo(resultPublicKey.PublicKey.GetEncoded(true)), "Key is not same as predicted");
-            Assert.That(NewTestData.ResultPublicKey.chainCode, Is.EqualTo(resultPublicKey.ChainCode), "Key is not same as predicted");
+            Assert.That(NewTestData.ResultPublicKey.chainCode, Is.EqualTo(resultPublicKey.ChainCode.ToArray()), "Key is not same as predicted");
         }
 
         [Test]
@@ -97,7 +97,7 @@ namespace KeyDerivationLibTests
         [Test]
         public void CompareChildDerivatedKeys()
         {
-            var privateDerivationKey = PrivateDerivationKeyFactory.CreatePrivateDerivationKey(NewTestData.MasterKey, NewTestData.RightTag);
+            using var privateDerivationKey = PrivateDerivationKeyFactory.CreatePrivateDerivationKey(NewTestData.MasterKey, NewTestData.RightTag);
             var childPrivateKey = PrivateDerivationKeyFactory.DerivePrivateChildKey(privateDerivationKey, 0);
 
             string BitcoinEllipticCurveName = "secp256k1";

@@ -1,5 +1,5 @@
 ﻿///////////////////////////////////////////////////////////////////////////////
-//   Copyright 2023 Eppie (https://eppie.io)
+//   Copyright 2025 Eppie (https://eppie.io)
 //
 //   Licensed under the Apache License, Version 2.0(the "License");
 //   you may not use this file except in compliance with the License.
@@ -15,9 +15,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 using KeyDerivation.Keys;
-using NBitcoin.Crypto;
 using NBitcoin;
-using Org.BouncyCastle.Asn1.X9;
+using NBitcoin.Crypto;
 using Org.BouncyCastle.Math.EC;
 using System;
 using System.Text;
@@ -29,8 +28,6 @@ namespace KeyDerivationLib
     /// </summary>
     public static class PublicDerivationKeyFactory
     {
-        public const string BitcoinEllipticCurveName = "secp256k1";
-
         /// <summary>
         /// Public derivation key creation from public derivation key and key tag (based on BIP-32).
         /// </summary>
@@ -78,7 +75,7 @@ namespace KeyDerivationLib
 
             var eccKey = new PubKey(derivationKey.PublicKey.GetEncoded(true));
 
-            ExtPubKey derivationExtKey = new ExtPubKey(eccKey, derivationKey.ChainCode);
+            ExtPubKey derivationExtKey = new ExtPubKey(eccKey, derivationKey.ChainCode.ToArray());
             return derivationExtKey.Derive(index).PubKey.ToBytes();
         }
 
@@ -91,7 +88,7 @@ namespace KeyDerivationLib
         public static ECPoint DerivePublicChildKeyAsECPoint(PublicDerivationKey derivationKey, uint index)
         {
             var keyBytes = DerivePublicChildKeyAsBytes(derivationKey, index);
-            return ECNamedCurveTable.GetByName(BitcoinEllipticCurveName).Curve.DecodePoint(keyBytes);
+            return Secp256k1.DomainParams.Curve.DecodePoint(keyBytes);
         }
 
         private static PublicDerivationKey ToPublicDerivationKey(this byte[] buffer, PublicDerivationKey oldKey)
@@ -101,14 +98,14 @@ namespace KeyDerivationLib
                 throw new ArgumentNullException(nameof(oldKey));
             }
 
-            const int KeyChainCodeLength = 32;
-            const int PrivateKeyLength = 32;
+            const int KeyChainCodeLength = Secp256k1.KeyChainCodeLength;
+            const int ScalarLength = Secp256k1.ScalarLength;
 
-            byte[] point = new byte[PrivateKeyLength];
+            byte[] point = new byte[ScalarLength];
             byte[] chainCode = new byte[KeyChainCodeLength];
 
-            Buffer.BlockCopy(buffer, 0, point, 0, PrivateKeyLength);
-            Buffer.BlockCopy(buffer, PrivateKeyLength, chainCode, 0, KeyChainCodeLength);
+            Buffer.BlockCopy(buffer, 0, point, 0, ScalarLength);
+            Buffer.BlockCopy(buffer, ScalarLength, chainCode, 0, KeyChainCodeLength);
 
             PublicDerivationKey tempKey = new PublicDerivationKey(point, chainCode);
 

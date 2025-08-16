@@ -1,5 +1,5 @@
 ﻿///////////////////////////////////////////////////////////////////////////////
-//   Copyright 2023 Eppie (https://eppie.io)
+//   Copyright 2025 Eppie (https://eppie.io)
 //
 //   Licensed under the Apache License, Version 2.0(the "License");
 //   you may not use this file except in compliance with the License.
@@ -63,19 +63,19 @@ namespace KeyDerivationLib
                 throw new ArgumentOutOfRangeException(nameof(index), "Index must be a non-negative integer.");
             }
 
-            if (derivationKey.Scalar is null || derivationKey.ChainCode is null)
+            if (derivationKey.Scalar.IsEmpty || derivationKey.ChainCode.IsEmpty)
             {
-                throw new ArgumentException("Derivation key scalar or chain code cannot be null.");
+                throw new ArgumentException("Derivation key scalar or chain code cannot be empty.");
             }
 
-            if (derivationKey.Scalar.Length != 32 || derivationKey.ChainCode.Length != 32)
+            if (derivationKey.Scalar.Length != Secp256k1.ScalarLength || derivationKey.ChainCode.Length != Secp256k1.KeyChainCodeLength)
             {
-                throw new ArgumentException("Derivation key scalar and chain code must be 32 bytes long.");
+                throw new ArgumentException($"Derivation key scalar and chain code must be {Secp256k1.ScalarLength} and {Secp256k1.KeyChainCodeLength} bytes long.");
             }
 
-            using (var eccKey = new Key(derivationKey.Scalar))
+            using (var eccKey = new Key(derivationKey.Scalar.ToArray()))
             {
-                ExtKey derivationExtKey = new ExtKey(eccKey, derivationKey.ChainCode);
+                ExtKey derivationExtKey = new ExtKey(eccKey, derivationKey.ChainCode.ToArray());
                 derivationExtKey = derivationExtKey.Derive(index, true);
                 
                 var privKey = derivationExtKey.PrivateKey.ToBytes();
@@ -128,9 +128,9 @@ namespace KeyDerivationLib
                                  .Derive(channel, false)
                                  .Derive(index, false);
 
-            using (var key = new Key(masterKey.Scalar))
+            using (var key = new Key(masterKey.Scalar.ToArray()))
             {
-                ExtKey extKey = new ExtKey(key, masterKey.ChainCode);
+                ExtKey extKey = new ExtKey(key, masterKey.ChainCode.ToArray());
                 extKey = extKey.Derive(keyPath);
                 
                 var privKey = extKey.PrivateKey.ToBytes();
