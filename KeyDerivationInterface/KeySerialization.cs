@@ -14,11 +14,9 @@
 //   limitations under the License.
 ///////////////////////////////////////////////////////////////////////////////
 
-using KeyDerivation.Keys;
-using Org.BouncyCastle.Asn1.X9;
 using System;
 
-namespace KeyDerivationLib
+namespace KeyDerivation.Keys
 {
     public static class KeySerialization
     {
@@ -75,8 +73,7 @@ namespace KeyDerivationLib
             Buffer.BlockCopy(buffer, 0, point, 0, Secp256k1.PublicKeyLength);
             Buffer.BlockCopy(buffer, Secp256k1.PublicKeyLength, chainCode, 0, Secp256k1.KeyChainCodeLength);
 
-            string CurveName = "secp256k1";
-            var ecPoint = ECNamedCurveTable.GetByName(CurveName).Curve.DecodePoint(point);
+            var ecPoint = Secp256k1.DomainParams.Curve.DecodePoint(point);
 
             return new PublicDerivationKey(ecPoint, chainCode);
         }
