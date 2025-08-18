@@ -67,8 +67,8 @@ namespace KeyDerivationLibTests
             KeyFactory.GenerateSeedPhrase();
             MasterKey key = KeyFactory.GetMasterKey();
 
-            Assert.That(key.Scalar.Length, Is.EqualTo(KeySerialization.PrivateKeyLength), "Master key scalar length is wrong");
-            Assert.That(key.ChainCode.Length, Is.EqualTo(KeySerialization.KeyChainCodeLength), "Key chain code length is wrong");
+            Assert.That(key.Scalar.Length, Is.EqualTo(Secp256k1.ScalarLength), "Master key scalar length is wrong");
+            Assert.That(key.ChainCode.Length, Is.EqualTo(Secp256k1.KeyChainCodeLength), "Key chain code length is wrong");
         }
 
         [Test]

@@ -1,5 +1,5 @@
 ﻿///////////////////////////////////////////////////////////////////////////////
-//   Copyright 2023 Eppie (https://eppie.io)
+//   Copyright 2025 Eppie (https://eppie.io)
 //
 //   Licensed under the Apache License, Version 2.0(the "License");
 //   you may not use this file except in compliance with the License.
@@ -14,25 +14,18 @@
 //   limitations under the License.
 ///////////////////////////////////////////////////////////////////////////////
 
-using Org.BouncyCastle.Asn1.X9;
 using System;
 
 namespace KeyDerivation.Keys
 {
     public static class KeySerialization
     {
-        public const int KeyChainCodeLength = 32;
-        public const int PrivateKeyLength = 32;
-        public const int PublicKeyLength = 33;
-
         public static MasterKey ToMasterKey(this byte[] buffer)
         {
-            var privateKey = buffer.ToPrivateDerivationKey();
-            return new MasterKey
+            using (var privateKey = buffer.ToPrivateDerivationKey())
             {
-                Scalar = privateKey.Scalar,
-                ChainCode = privateKey.ChainCode
-            };
+                return new MasterKey(privateKey.Scalar.ToArray(), privateKey.ChainCode.ToArray());
+            }
         }
 
         public static byte[] ToByteBuffer(this MasterKey key)
@@ -43,26 +36,18 @@ namespace KeyDerivation.Keys
 
         public static PrivateDerivationKey ToPrivateDerivationKey(this byte[] buffer)
         {
-            byte[] scalar = new byte[PrivateKeyLength];
-            byte[] chainCode = new byte[KeyChainCodeLength];
+            byte[] scalar = new byte[Secp256k1.ScalarLength];
+            byte[] chainCode = new byte[Secp256k1.KeyChainCodeLength];
 
-            Buffer.BlockCopy(buffer, 0, scalar, 0, PrivateKeyLength);
-            Buffer.BlockCopy(buffer, PrivateKeyLength, chainCode, 0, KeyChainCodeLength);
+            Buffer.BlockCopy(buffer, 0, scalar, 0, Secp256k1.ScalarLength);
+            Buffer.BlockCopy(buffer, Secp256k1.ScalarLength, chainCode, 0, Secp256k1.KeyChainCodeLength);
 
-            return new PrivateDerivationKey
-            {
-                Scalar = scalar,
-                ChainCode = chainCode
-            };
+            return new PrivateDerivationKey(scalar, chainCode);
         }
 
         public static PrivateDerivationKey ToPrivateDerivationKey(byte[] scalar, byte[] chainCode)
         {
-            return new PrivateDerivationKey
-            {
-                Scalar = scalar,
-                ChainCode = chainCode
-            };
+            return new PrivateDerivationKey(scalar, chainCode);
         }
 
         public static byte[] ToByteBuffer(this PrivateDerivationKey key)
@@ -72,24 +57,23 @@ namespace KeyDerivation.Keys
                 throw new ArgumentNullException(nameof(key));
             }
 
-            byte[] buffer = new byte[KeyChainCodeLength + PrivateKeyLength];
+            byte[] buffer = new byte[Secp256k1.KeyChainCodeLength + Secp256k1.ScalarLength];
 
-            Buffer.BlockCopy(key.Scalar, 0, buffer, 0, PrivateKeyLength);
-            Buffer.BlockCopy(key.ChainCode, 0, buffer, PrivateKeyLength, KeyChainCodeLength);
+            Buffer.BlockCopy(key.Scalar.ToArray(), 0, buffer, 0, Secp256k1.ScalarLength);
+            Buffer.BlockCopy(key.ChainCode.ToArray(), 0, buffer, Secp256k1.ScalarLength, Secp256k1.KeyChainCodeLength);
 
             return buffer;
         }
 
         public static PublicDerivationKey ToPublicDerivationKey(this byte[] buffer)
         {
-            byte[] point = new byte[PublicKeyLength];
-            byte[] chainCode = new byte[KeyChainCodeLength];
+            byte[] point = new byte[Secp256k1.PublicKeyLength];
+            byte[] chainCode = new byte[Secp256k1.KeyChainCodeLength];
 
-            Buffer.BlockCopy(buffer, 0, point, 0, PublicKeyLength);
-            Buffer.BlockCopy(buffer, PublicKeyLength, chainCode, 0, KeyChainCodeLength);
+            Buffer.BlockCopy(buffer, 0, point, 0, Secp256k1.PublicKeyLength);
+            Buffer.BlockCopy(buffer, Secp256k1.PublicKeyLength, chainCode, 0, Secp256k1.KeyChainCodeLength);
 
-            string CurveName = "secp256k1";
-            var ecPoint = ECNamedCurveTable.GetByName(CurveName).Curve.DecodePoint(point);
+            var ecPoint = Secp256k1.DomainParams.Curve.DecodePoint(point);
 
             return new PublicDerivationKey(ecPoint, chainCode);
         }
@@ -101,10 +85,10 @@ namespace KeyDerivation.Keys
                 throw new ArgumentNullException(nameof(key));
             }
 
-            byte[] buffer = new byte[KeyChainCodeLength + PublicKeyLength];
+            byte[] buffer = new byte[Secp256k1.KeyChainCodeLength + Secp256k1.PublicKeyLength];
 
-            Buffer.BlockCopy(key.PublicKey.GetEncoded(true), 0, buffer, 0, PublicKeyLength);
-            Buffer.BlockCopy(key.ChainCode, 0, buffer, PublicKeyLength, KeyChainCodeLength);
+            Buffer.BlockCopy(key.PublicKey.GetEncoded(true), 0, buffer, 0, Secp256k1.PublicKeyLength);
+            Buffer.BlockCopy(key.ChainCode.ToArray(), 0, buffer, Secp256k1.PublicKeyLength, Secp256k1.KeyChainCodeLength);
 
             return buffer;
         }

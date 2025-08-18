@@ -25,20 +25,20 @@ namespace KeyDerivationLibTests
         [Test]
         public void PrivateDerivationKeysAreDeterministic()
         {
-            var key1 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.RightTag);
-            var key2 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.WrongTag);
+            using var key1 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.RightTag);
+            using var key2 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.WrongTag);
 
-            Assert.That(TestData.PrivateDerivationKey1.scalar, Is.EqualTo(key1.Scalar), "Key is not same as predicted");
-            Assert.That(TestData.PrivateDerivationKey1.chainCode, Is.EqualTo(key1.ChainCode), "Key is not same as predicted");
-            Assert.That(TestData.PrivateDerivationKey2.scalar, Is.EqualTo(key2.Scalar), "Key is not same as predicted");
-            Assert.That(TestData.PrivateDerivationKey2.chainCode, Is.EqualTo(key2.ChainCode), "Key is not same as predicted");
+            Assert.That(TestData.PrivateDerivationKey1.scalar, Is.EqualTo(key1.Scalar.ToArray()), "Key is not same as predicted");
+            Assert.That(TestData.PrivateDerivationKey1.chainCode, Is.EqualTo(key1.ChainCode.ToArray()), "Key is not same as predicted");
+            Assert.That(TestData.PrivateDerivationKey2.scalar, Is.EqualTo(key2.Scalar.ToArray()), "Key is not same as predicted");
+            Assert.That(TestData.PrivateDerivationKey2.chainCode, Is.EqualTo(key2.ChainCode.ToArray()), "Key is not same as predicted");
         }
 
         [Test]
         public void PrivateDerivationKeysAreDifferentWithMasterKey()
         {
-            var key1 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.RightTag);
-            var key2 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey2, TestData.RightTag);
+            using var key1 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.RightTag);
+            using var key2 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey2, TestData.RightTag);
 
             Assert.That(key2, Is.Not.EqualTo(key1), "Keys with different MasterKey have to be different too");
         }
@@ -46,8 +46,8 @@ namespace KeyDerivationLibTests
         [Test]
         public void PrivateDerivationKeysAreDifferentWithTags()
         {
-            var key1 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.RightTag);
-            var key2 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.WrongTag);
+            using var key1 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.RightTag);
+            using var key2 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.WrongTag);
 
             Assert.That(key2, Is.Not.EqualTo(key1), "Keys with different userId have to be different too");
         }
@@ -55,23 +55,23 @@ namespace KeyDerivationLibTests
         [Test]
         public void PrivateChildKeysAreDeterministic()
         {
-            var derivationKey = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.RightTag);
+            using var derivationKey = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.RightTag);
 
             var key1 = DerivationKeyFactory.DerivePrivateChildKey(derivationKey, 0).Scalar;
             var key2 = DerivationKeyFactory.DerivePrivateChildKey(derivationKey, 1).Scalar;
 
-            Assert.That(TestData.PrivateChildKey1, Is.EqualTo(key1), "Key is not same as predicted");
-            Assert.That(TestData.PrivateChildKey2, Is.EqualTo(key2), "Key is not same as predicted");
+            Assert.That(TestData.PrivateChildKey1, Is.EqualTo(key1.ToArray()), "Key is not same as predicted");
+            Assert.That(TestData.PrivateChildKey2, Is.EqualTo(key2.ToArray()), "Key is not same as predicted");
         }
 
         [Test]
         public void PrivateChildKeysAreDifferentWithMasterKey()
         {
-            var derivationKey1 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.RightTag);
-            var derivationKey2 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey2, TestData.RightTag);
+            using var derivationKey1 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.RightTag);
+            using var derivationKey2 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey2, TestData.RightTag);
 
-            var key1 = DerivationKeyFactory.DerivePrivateChildKey(derivationKey1, 0);
-            var key2 = DerivationKeyFactory.DerivePrivateChildKey(derivationKey2, 0);
+            using var key1 = DerivationKeyFactory.DerivePrivateChildKey(derivationKey1, 0);
+            using var key2 = DerivationKeyFactory.DerivePrivateChildKey(derivationKey2, 0);
 
             Assert.That(key2, Is.Not.EqualTo(key1), "Keys with different MasterKey have to be different too");
         }
@@ -79,11 +79,11 @@ namespace KeyDerivationLibTests
         [Test]
         public void PrivateChildKeysAreDifferentWithTags()
         {
-            var derivationKey1 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.RightTag);
-            var derivationKey2 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.WrongTag);
+            using var derivationKey1 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.RightTag);
+            using var derivationKey2 = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.WrongTag);
 
-            var key1 = DerivationKeyFactory.DerivePrivateChildKey(derivationKey1, 0);
-            var key2 = DerivationKeyFactory.DerivePrivateChildKey(derivationKey2, 0);
+            using var key1 = DerivationKeyFactory.DerivePrivateChildKey(derivationKey1, 0);
+            using var key2 = DerivationKeyFactory.DerivePrivateChildKey(derivationKey2, 0);
 
             Assert.That(key2, Is.Not.EqualTo(key1), "Keys with different userId have to be different too");
         }
@@ -91,10 +91,10 @@ namespace KeyDerivationLibTests
         [Test]
         public void PrivateChildKeysAreDifferentWithKeyIndex()
         {
-            var derivationKey = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.RightTag);
+            using var derivationKey = DerivationKeyFactory.CreatePrivateDerivationKey(TestData.MasterKey, TestData.RightTag);
 
-            var key1 = DerivationKeyFactory.DerivePrivateChildKey(derivationKey, 0);
-            var key2 = DerivationKeyFactory.DerivePrivateChildKey(derivationKey, 1);
+            using var key1 = DerivationKeyFactory.DerivePrivateChildKey(derivationKey, 0);
+            using var key2 = DerivationKeyFactory.DerivePrivateChildKey(derivationKey, 1);
 
             Assert.That(key2, Is.Not.EqualTo(key1), "Keys with different KeyIndex have to be different too");
         }
@@ -109,10 +109,10 @@ namespace KeyDerivationLibTests
         public void CreatePrivateDerivationKeyBip44CreatesKey()
         {
             var masterKey = TestData.MasterKey;
-            var derivedKey = DerivationKeyFactory.CreatePrivateDerivationKeyBip44(masterKey, 3630, 0, 10, 0);
+            using var derivedKey = DerivationKeyFactory.CreatePrivateDerivationKeyBip44(masterKey, 3630, 0, 10, 0);
             Assert.That(derivedKey, Is.Not.Null);
-            Assert.That(derivedKey.Scalar, Is.Not.Null.And.Length.EqualTo(32));
-            Assert.That(derivedKey.ChainCode, Is.Not.Null.And.Length.EqualTo(32));
+            Assert.That(derivedKey.Scalar.ToArray(), Is.Not.Null.And.Length.EqualTo(32));
+            Assert.That(derivedKey.ChainCode.ToArray(), Is.Not.Null.And.Length.EqualTo(32));
         }
 
         [Test]
@@ -128,30 +128,30 @@ namespace KeyDerivationLibTests
         public void CreatePrivateDerivationKeyBip44BoundaryIndices()
         {
             var masterKey = TestData.MasterKey;
-            var minKey = DerivationKeyFactory.CreatePrivateDerivationKeyBip44(masterKey, 0, 0, 0, 0);
-            var maxKey = DerivationKeyFactory.CreatePrivateDerivationKeyBip44(masterKey, int.MaxValue, int.MaxValue, int.MaxValue, int.MaxValue);
+            using var minKey = DerivationKeyFactory.CreatePrivateDerivationKeyBip44(masterKey, 0, 0, 0, 0);
+            using var maxKey = DerivationKeyFactory.CreatePrivateDerivationKeyBip44(masterKey, int.MaxValue, int.MaxValue, int.MaxValue, int.MaxValue);
             Assert.That(minKey, Is.Not.Null);
             Assert.That(maxKey, Is.Not.Null);
-            Assert.That(minKey.Scalar, Is.Not.Null.And.Length.EqualTo(32));
-            Assert.That(maxKey.Scalar, Is.Not.Null.And.Length.EqualTo(32));
+            Assert.That(minKey.Scalar.ToArray(), Is.Not.Null.And.Length.EqualTo(32));
+            Assert.That(maxKey.Scalar.ToArray(), Is.Not.Null.And.Length.EqualTo(32));
         }
 
         [Test]
         public void CreatePrivateDerivationKeyBip44Repeatability()
         {
             var masterKey = TestData.MasterKey;
-            var key1 = DerivationKeyFactory.CreatePrivateDerivationKeyBip44(masterKey, 3630, 0, 10, 0);
-            var key2 = DerivationKeyFactory.CreatePrivateDerivationKeyBip44(masterKey, 3630, 0, 10, 0);
-            Assert.That(key1.Scalar, Is.EqualTo(key2.Scalar));
-            Assert.That(key1.ChainCode, Is.EqualTo(key2.ChainCode));
+            using var key1 = DerivationKeyFactory.CreatePrivateDerivationKeyBip44(masterKey, 3630, 0, 10, 0);
+            using var key2 = DerivationKeyFactory.CreatePrivateDerivationKeyBip44(masterKey, 3630, 0, 10, 0);
+            Assert.That(key1.Scalar.ToArray(), Is.EqualTo(key2.Scalar.ToArray()));
+            Assert.That(key1.ChainCode.ToArray(), Is.EqualTo(key2.ChainCode.ToArray()));
         }
 
         [Test]
         public void CreatePrivateDerivationKeyBip44Uniqueness()
         {
             var masterKey = TestData.MasterKey;
-            var key1 = DerivationKeyFactory.CreatePrivateDerivationKeyBip44(masterKey, 3630, 0, 10, 0);
-            var key2 = DerivationKeyFactory.CreatePrivateDerivationKeyBip44(masterKey, 3630, 0, 10, 1);
+            using var key1 = DerivationKeyFactory.CreatePrivateDerivationKeyBip44(masterKey, 3630, 0, 10, 0);
+            using var key2 = DerivationKeyFactory.CreatePrivateDerivationKeyBip44(masterKey, 3630, 0, 10, 1);
             Assert.That(key1.Scalar, Is.Not.EqualTo(key2.Scalar));
             Assert.That(key1.ChainCode, Is.Not.EqualTo(key2.ChainCode));
         }
@@ -170,16 +170,16 @@ namespace KeyDerivationLibTests
 
             var keyPath = new KeyPath("m/44'/0'/0'/0/0");
 
-            var customKey = DerivationKeyFactory.CreatePrivateDerivationKeyBip44(masterKey, 0, 0, 0, 0);
+            using var customKey = DerivationKeyFactory.CreatePrivateDerivationKeyBip44(masterKey, 0, 0, 0, 0);
 
             var derivedExtKey = masterExtKey.Derive(keyPath);
             var standardScalar = derivedExtKey.PrivateKey.ToBytes();
             var standardChainCode = derivedExtKey.ChainCode;
 
-            Assert.That(customKey.Scalar.SequenceEqual(standardScalar));
-            Assert.That(customKey.ChainCode.SequenceEqual(standardChainCode));
+            Assert.That(customKey.Scalar.ToArray().SequenceEqual(standardScalar));
+            Assert.That(customKey.ChainCode.ToArray().SequenceEqual(standardChainCode));
            
-            using (var customPrivateKey = new Key(customKey.Scalar))
+            using (var customPrivateKey = new Key(customKey.Scalar.ToArray()))
             using (var standardPrivateKey = new Key(standardScalar))
             {
                 var customAddress = customPrivateKey.PubKey.GetAddress(ScriptPubKeyType.Legacy, Network.Main);
