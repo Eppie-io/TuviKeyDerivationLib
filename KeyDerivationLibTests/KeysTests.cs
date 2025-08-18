@@ -309,9 +309,6 @@ namespace KeyDerivationLibTests
             }
         }
 
-        private static byte[] NotValidScalar => new byte[Secp256k1.ScalarLength];
-        private static byte[] NotValidChainCode => new byte[Secp256k1.KeyChainCodeLength];
-
         [Test]
         public void MasterKeyCanBeCreatedAndUsed()
         {
@@ -325,7 +322,10 @@ namespace KeyDerivationLibTests
         [Test]
         public void MasterKeyThrowIfNotValid()
         {
-            using var master = new MasterKey(NotValidScalar, NotValidChainCode);
+            var notValidScalar = new byte[Secp256k1.ScalarLength];
+            var notValidChainCode = new byte[Secp256k1.KeyChainCodeLength];
+
+            using var master = new MasterKey(notValidScalar, notValidChainCode);
 
             Assert.That(() => { var _ = master.PublicDerivationKey; }, Throws.TypeOf<KeyCreationException>());
         }
