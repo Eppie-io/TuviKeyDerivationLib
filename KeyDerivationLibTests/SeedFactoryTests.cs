@@ -20,7 +20,7 @@ using KeyDerivationLib;
 
 namespace KeyDerivationLibTests
 {
-    internal class TestKeyDerivationDetailsProvider : IKeyDerivationDetailsProvider
+    internal sealed class TestKeyDerivationDetailsProvider : IKeyDerivationDetailsProvider
     {
         public string GetSaltPhrase()
         {
@@ -38,9 +38,9 @@ namespace KeyDerivationLibTests
         }
     }
 
-    public class SeedFactoryTests
+    internal sealed class SeedFactoryTests
     {
-        private IKeyDerivationDetailsProvider KeyDerivationDetails = new TestKeyDerivationDetailsProvider();
+        private TestKeyDerivationDetailsProvider KeyDerivationDetails = new TestKeyDerivationDetailsProvider();
         private MasterKeyFactory KeyFactory;
 
         [OneTimeSetUp]

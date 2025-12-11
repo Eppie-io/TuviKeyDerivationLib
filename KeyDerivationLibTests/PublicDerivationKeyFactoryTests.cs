@@ -26,7 +26,7 @@ using KeyDerivation.Keys;
 
 namespace KeyDerivationLibTests
 {
-    public class PublicDerivationKeyFactoryTests
+    internal sealed class PublicDerivationKeyFactoryTests
     {
         [Test]
         public void PublicDerivationKeysAreDeterministic()
@@ -104,7 +104,7 @@ namespace KeyDerivationLibTests
             DerObjectIdentifier curveOid = ECNamedCurveTable.GetOid(BitcoinEllipticCurveName);
             ECKeyGenerationParameters keyParams = new ECKeyGenerationParameters(curveOid, new SecureRandom());
             ECPrivateKeyParameters privateKey = new ECPrivateKeyParameters("EC", new BigInteger(1, childPrivateKey), keyParams.PublicKeyParamSet);
-            ECMultiplier multiplier = new FixedPointCombMultiplier();
+            FixedPointCombMultiplier multiplier = new FixedPointCombMultiplier();
             ECPoint q = multiplier.Multiply(keyParams.DomainParameters.G, privateKey.D); // child public key from private key
 
             var publicDerivationKey = PublicDerivationKeyFactory.CreatePublicDerivationKey(NewTestData.MasterKey.PublicDerivationKey, NewTestData.RightTag);

@@ -20,7 +20,7 @@ using NBitcoin;
 
 namespace KeyDerivationLibTests
 {
-    public class DerivationKeyFactoryTests
+    internal sealed class DerivationKeyFactoryTests
     {
         [Test]
         public void PrivateDerivationKeysAreDeterministic()
