@@ -19,7 +19,7 @@ using KeyDerivationLib;
 
 namespace KeyDerivationLibTests
 {
-    public class KeySerializationTests
+    internal sealed class KeySerializationTests
     {
         [Test]
         public void SerializeDeserializePrivateDerivationKey()
