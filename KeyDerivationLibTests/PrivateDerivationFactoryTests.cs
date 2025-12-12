@@ -18,7 +18,7 @@ using KeyDerivationLib;
 
 namespace KeyDerivationLibTests
 {
-    public class PrivateDerivationKeyFactoryTests
+    internal sealed class PrivateDerivationKeyFactoryTests
     {
         [Test]
         public void CompareDerivatedKeys()
@@ -100,7 +100,7 @@ namespace KeyDerivationLibTests
         [Test]
         public void PrivateChildKeysAreDifferentWithKeyIndex()
         {
-            using var derivationKey = DerivationKeyFactory.CreatePrivateDerivationKey(NewTestData.MasterKey, NewTestData.RightTag);
+            using var derivationKey = PrivateDerivationKeyFactory.CreatePrivateDerivationKey(NewTestData.MasterKey, NewTestData.RightTag);
 
             var key1 = PrivateDerivationKeyFactory.DerivePrivateChildKey(derivationKey, 0);
             var key2 = PrivateDerivationKeyFactory.DerivePrivateChildKey(derivationKey, 1);

@@ -20,7 +20,7 @@ using KeyDerivationLib;
 
 namespace KeyDerivationLibTests
 {
-    public class KeysTests
+    internal sealed class KeysTests
     {
         [Test]
         public void PrivateDerivationKeyEqualsCorrectWork()
@@ -72,7 +72,7 @@ namespace KeyDerivationLibTests
     }
 
     [TestFixture]
-    public class PrivateDerivationKeyTests
+    internal sealed class PrivateDerivationKeyTests
     {
         private static byte[] TestScalar
         {
@@ -287,7 +287,7 @@ namespace KeyDerivationLibTests
     }
 
     [TestFixture]
-    public class MasterKeyTests
+    internal sealed class MasterKeyTests
     {
         private static byte[] TestScalar
         {

@@ -19,7 +19,7 @@ using KeyDerivationLib;
 
 namespace KeyDerivationLibTests
 {
-    public class MasterKeyFactoryCreationTests
+    internal sealed class MasterKeyFactoryCreationTests
     {
         [Test]
         public void MasterKeyFactoryCreationNullProviderThrowArgumentNullException()
