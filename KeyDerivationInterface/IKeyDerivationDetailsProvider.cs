@@ -39,7 +39,7 @@ namespace KeyDerivation
         /// </summary>
         Dictionary<SpecialPgpKeyType, string> GetSpecialPgpKeyIdentities();
     }
-    
+
     /// <summary>
     /// Enumeration of special PGP key types.
     /// </summary>

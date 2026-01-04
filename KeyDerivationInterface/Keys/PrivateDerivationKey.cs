@@ -110,12 +110,12 @@ namespace KeyDerivation.Keys
 
             if (other is null)
             {
-                return false; 
+                return false;
             }
 
             if (ReferenceEquals(this, other))
             {
-                return true; 
+                return true;
             }
 
             return Secure.FixedTimeEquals(this.scalar.AsSpan(), other.scalar.AsSpan()) &&
@@ -154,7 +154,7 @@ namespace KeyDerivation.Keys
         {
             if (disposed)
             {
-                return; 
+                return;
             }
 
             if (scalar != null)

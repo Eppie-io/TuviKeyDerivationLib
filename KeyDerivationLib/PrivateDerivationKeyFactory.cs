@@ -46,7 +46,7 @@ namespace KeyDerivationLib
             byte[] hashKey = Encoding.UTF8.GetBytes(tag);
             var hashMAC = Hashes.HMACSHA512(hashKey, hashInput);
 
-            return hashMAC.ToPrivateDerivationKey(derivationKey); 
+            return hashMAC.ToPrivateDerivationKey(derivationKey);
         }
 
         /// <summary>
