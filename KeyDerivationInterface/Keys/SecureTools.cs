@@ -25,7 +25,7 @@ namespace KeyDerivation.Keys
         {
             if (a.Length != b.Length)
             {
-                return false; 
+                return false;
             }
 
             int diff = 0;

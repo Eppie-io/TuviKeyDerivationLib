@@ -77,7 +77,7 @@ namespace KeyDerivationLib
             {
                 ExtKey derivationExtKey = new ExtKey(eccKey, derivationKey.ChainCode.ToArray());
                 derivationExtKey = derivationExtKey.Derive(index, true);
-                
+
                 var privKey = derivationExtKey.PrivateKey.ToBytes();
                 var chainCode = derivationExtKey.ChainCode;
 
@@ -132,7 +132,7 @@ namespace KeyDerivationLib
             {
                 ExtKey extKey = new ExtKey(key, masterKey.ChainCode.ToArray());
                 extKey = extKey.Derive(keyPath);
-                
+
                 var privKey = extKey.PrivateKey.ToBytes();
                 var chainCode = extKey.ChainCode;
                 return KeySerialization.ToPrivateDerivationKey(privKey, chainCode);

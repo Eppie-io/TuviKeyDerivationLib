@@ -61,7 +61,7 @@ namespace KeyDerivation.Keys
         private PublicDerivationKey(byte[] scalar, byte[] chainCode)
         {
             Verify(scalar, chainCode);
-            
+
             try
             {
                 var biPrivateKey = new BigInteger(1, scalar);
@@ -95,7 +95,7 @@ namespace KeyDerivation.Keys
         {
             if (other is null)
             {
-                return false; 
+                return false;
             }
 
             return PublicKey.Equals(other.PublicKey) &&
